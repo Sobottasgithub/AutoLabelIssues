@@ -1,0 +1,44 @@
+name: Label issues
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+
+jobs:
+  add_Bug_Label:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bugKeyWords: [
+          "Bug", "bug",
+          "fix", "Fix",
+          "doesn't work",
+          "wrong", "Wrong",
+          "Issue", "issue",
+          "error", "Error",
+          "crash", "Crash"
+        ]
+        featureKeyWords: [
+          "implement", "Implement", 
+          "add", "Add", 
+          "feature", "Feature",
+          "enhancement", "Enhancement",
+          "support", "Support",
+          "wish", "Wish",
+          "would like", "Would like", "Would Like",
+          "improvement", "Improvement"
+        ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-add-labels@v1.1.0
+        if: ${{contains(github.event.issue.title, matrix.bugKeyWords) || contains(github.event.issue.body, matrix.bugKeyWords)}}
+        with:
+          github_token: ${{ github.token }}
+          labels: bug
+        if: ${{contains(github.event.issue.title, matrix.featureKeyWords) || contains(github.event.issue.body, matrix.featureKeyWords)}}
+        with:
+          github_token: ${{ github.token }}
+          labels: feature
+            
