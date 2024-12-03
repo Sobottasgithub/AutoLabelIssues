@@ -20,6 +20,17 @@ jobs:
           "error", "Error",
           "crash", "Crash"
         ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-add-labels@v1
+        if: ${{contains(github.event.issue.title, matrix.bugKeyWords) || contains(github.event.issue.body, matrix.bugKeyWords)}}
+        with:
+          labels: bug
+
+  add_Feature_Label:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
         featureKeyWords: [
           "implement", "Implement", 
           "add", "Add", 
@@ -32,13 +43,8 @@ jobs:
         ]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-ecosystem/action-add-labels@v1.1.0
-        if: ${{contains(github.event.issue.title, matrix.bugKeyWords) || contains(github.event.issue.body, matrix.bugKeyWords)}}
-        with:
-          github_token: ${{ github.token }}
-          labels: bug
+      - uses: actions-ecosystem/action-add-labels@v1
         if: ${{contains(github.event.issue.title, matrix.featureKeyWords) || contains(github.event.issue.body, matrix.featureKeyWords)}}
         with:
-          github_token: ${{ github.token }}
           labels: feature
             
