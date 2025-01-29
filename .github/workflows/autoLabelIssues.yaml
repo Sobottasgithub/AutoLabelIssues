@@ -20,12 +20,17 @@ jobs:
           "error", "Error",
           "crash", "Crash"
         ]
+    permissions:
+            issues: write
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-ecosystem/action-add-labels@v1
-        if: ${{contains(github.event.issue.title, matrix.bugKeyWords) || contains(github.event.issue.body, matrix.bugKeyWords)}}
-        with:
-          labels: bug
+      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
+        if: ${{contains(github.event.issue.title, matrix.featureKeyWords) || contains(github.event.issue.body, matrix.featureKeyWords)}}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          LABELS: bug
 
   add_Feature_Label:
     runs-on: ubuntu-latest
@@ -41,10 +46,15 @@ jobs:
           "would like", "Would like", "Would Like",
           "improvement", "Improvement"
         ]
+    permissions:
+            issues: write
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-ecosystem/action-add-labels@v1
+      - run: gh issue edit "$NUMBER" --add-label "$LABELS"
         if: ${{contains(github.event.issue.title, matrix.featureKeyWords) || contains(github.event.issue.body, matrix.featureKeyWords)}}
-        with:
-          labels: feature
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          LABELS: feature
             
